@@ -8,9 +8,9 @@ const Header = () => {
   ];
 
   return (
-    <header className='fixed top-0 left-0 w-full flex justify-between items-center p-3 bg-white shadow-md'>
+    <header className='fixed left-0 top-0 flex w-full items-center justify-between bg-white p-3 shadow-md'>
       <a href='/' className='text-2xl font-bold text-orange-500'>
-        Obbli
+        {'Obbli'}
       </a>
       <nav>
         <ul className='flex space-x-4'>
@@ -26,7 +26,7 @@ const Header = () => {
           ))}
         </ul>
       </nav>
-      <div></div>
+      <div />
     </header>
   );
 };

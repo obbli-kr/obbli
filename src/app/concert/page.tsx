@@ -1,7 +1,7 @@
 const ConcertPage = () => {
   return (
     <div>
-      <h1>Concert Page</h1>
+      <h1>{'Concert Page'}</h1>
     </div>
   );
 };
