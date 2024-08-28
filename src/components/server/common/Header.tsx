@@ -1,3 +1,6 @@
+import Button from '@/components/server/ui/Button';
+import Link from 'next/link';
+
 const Header = () => {
   const navItems = [
     { href: '/obbli', label: '오브리' },
@@ -8,25 +11,22 @@ const Header = () => {
   ];
 
   return (
-    <header className='fixed left-0 top-0 flex w-full items-center justify-between bg-white p-3 shadow-md'>
-      <a href='/' className='text-2xl font-bold text-orange-500'>
-        {'Obbli'}
-      </a>
-      <nav>
-        <ul className='flex space-x-4'>
+    <header className='fixed left-0 top-0 w-full bg-white shadow'>
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center'>
+        <Link href='/'>
+          <h1 className='text-3xl font-bold text-orange-600'>Obbli</h1>
+        </Link>
+        <div>
           {navItems.map((item) => (
-            <li key={item.href}>
-              <a
-                href={item.href}
-                className='text-lg text-gray-700 hover:text-orange-500'
-              >
-                {item.label}
-              </a>
-            </li>
+            <Link key={item.href} href={item.href}>
+              <Button size='md'>{item.label}</Button>
+            </Link>
           ))}
-        </ul>
-      </nav>
-      <div />
+        </div>
+        <Link href='/login'>
+          <Button size='md'>로그인</Button>
+        </Link>
+      </div>
     </header>
   );
 };
