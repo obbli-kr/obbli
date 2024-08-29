@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { ThemeProvider } from '@/layouts/ThemeProvider';
 import Header from '@/components/server/common/Header';
 
 interface RootLayoutProps {
@@ -15,8 +16,10 @@ const RootLayout = ({ children }: RootLayoutProps) => {
   return (
     <html lang='en' suppressHydrationWarning>
       <body>
-        <Header />
-        <main className='mt-[64px]'>{children}</main>
+        <ThemeProvider>
+          <Header />
+          <main className='mt-[64px]'>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   );
