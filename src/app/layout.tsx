@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
+import { headers } from 'next/headers';
 import './globals.css';
-import { ThemeProvider } from '@/layouts/ThemeProvider';
 import Header from '@/components/server/common/Header';
 
 interface RootLayoutProps {
@@ -13,13 +13,13 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: RootLayoutProps) => {
+  const darkModeHeader = headers().get('OS-Dark-Mode');
+  const isDarkMode = darkModeHeader === 'true';
   return (
-    <html lang='en' suppressHydrationWarning>
+    <html lang='en' className={isDarkMode ? 'dark' : ''}>
       <body>
-        <ThemeProvider>
-          <Header />
-          <main className='mt-[64px]'>{children}</main>
-        </ThemeProvider>
+        <Header />
+        <main className='mt-[64px]'>{children}</main>
       </body>
     </html>
   );
