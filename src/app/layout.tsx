@@ -13,11 +13,12 @@ export const metadata: Metadata = {
 };
 
 const RootLayout = ({ children }: RootLayoutProps) => {
-  const darkModeHeader = headers().get('OS-Dark-Mode');
-  const isDarkMode = darkModeHeader === 'true';
+  const themeHeader = headers().get('OS-Theme');
+  const isDarkMode = themeHeader === 'dark';
+
   return (
     <html lang='en' className={isDarkMode ? 'dark' : ''}>
-      <body>
+      <body className='dark:bg-[--background] dark:text-white'>
         <Header />
         <main className='mt-[64px]'>{children}</main>
       </body>

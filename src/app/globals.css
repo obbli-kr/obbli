@@ -9,3 +9,8 @@
   --background: #ffffff;
   --foreground: #222222;
 }
+
+.dark {
+  --background: #222222;
+  --foreground: #ffffff;
+}

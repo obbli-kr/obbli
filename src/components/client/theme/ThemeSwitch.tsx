@@ -10,18 +10,19 @@ import {
 import { LucideIcon, Dot, Monitor, Moon, Sun } from 'lucide-react';
 
 interface DropdownItemProps {
-  currentTheme: string;
+  newTheme: string;
   label: string;
   Icon: LucideIcon;
 }
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<string>('system');
+  const [currentTheme, setCurrentTheme] = useState<string>('light');
 
   useEffect(() => {
     setMounted(true);
 
+    // theme 쿠키 확인
     const themeCookie = document.cookie
       .split('; ')
       .find((row) => row.startsWith('theme'))
@@ -29,16 +30,20 @@ const ThemeSwitch = () => {
 
     if (themeCookie) {
       setCurrentTheme(themeCookie);
-    }
-
-    const darkModeCookie = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('darkMode'))
-      ?.split('=')[1];
-
-    if (darkModeCookie === 'true') {
-      document.documentElement.classList.add('dark');
+      if (themeCookie === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else if (themeCookie === 'light') {
+        document.documentElement.classList.remove('dark');
+      } else {
+        // 시스템 테마 반영
+        const systemPrefersDark = window.matchMedia(
+          '(prefers-color-scheme: dark)'
+        ).matches;
+        document.documentElement.classList.toggle('dark', systemPrefersDark);
+      }
     } else {
+      // 쿠키가 없을 때 기본으로 light 모드로 설정
+      document.cookie = `theme=light; path=/;`;
       document.documentElement.classList.remove('dark');
     }
 
@@ -75,14 +80,14 @@ const ThemeSwitch = () => {
     }
   };
 
-  const ThemeItem = ({ currentTheme, Icon, label }: DropdownItemProps) => (
-    <DropdownItem onClick={() => handleSetTheme(currentTheme)}>
+  const ThemeItem = ({ newTheme, Icon, label }: DropdownItemProps) => (
+    <DropdownItem onClick={() => handleSetTheme(newTheme)}>
       <div className='w-full flex justify-between items-center'>
         <div className='flex items-center gap-2'>
           <Icon width={14} />
           {label}
         </div>
-        {currentTheme === currentTheme && <Dot className='text-end' />}
+        {currentTheme === newTheme && <Dot className='text-end' />}
       </div>
     </DropdownItem>
   );
@@ -103,9 +108,9 @@ const ThemeSwitch = () => {
         </button>
       </DropdownTrigger>
       <DropdownList align='end'>
-        <ThemeItem currentTheme='light' label='Light' Icon={Sun} />
-        <ThemeItem currentTheme='dark' label='Dark' Icon={Moon} />
-        <ThemeItem currentTheme='system' label='System' Icon={Monitor} />
+        <ThemeItem newTheme='light' label='Light' Icon={Sun} />
+        <ThemeItem newTheme='dark' label='Dark' Icon={Moon} />
+        <ThemeItem newTheme='system' label='System' Icon={Monitor} />
       </DropdownList>
     </Dropdown>
   );

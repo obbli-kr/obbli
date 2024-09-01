@@ -3,7 +3,6 @@ import Link from 'next/link';
 import Button from '@/components/server/ui/Button';
 
 // ThemeSwitch를 클라이언트 컴포넌트로 동적 로딩
-// (좋은 방법일까요 ? header 컴포넌트를 ssr 하고싶고, Themeswitch는 csr이 불가피해서...)
 const ThemeSwitch = dynamic(
   () => import('@/components/client/theme/ThemeSwitch'),
   { ssr: false }
@@ -19,7 +18,7 @@ const Header = () => {
   ];
 
   return (
-    <header className='fixed left-0 top-0 w-full shadow'>
+    <header className='fixed left-0 top-0 w-full shadow dark:bg-[--background] dark:text-white'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center'>
         <Link href='/'>
           <h1 className='text-3xl font-bold text-orange-600'>Obbli</h1>
