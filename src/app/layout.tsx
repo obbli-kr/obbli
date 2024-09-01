@@ -18,7 +18,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
 
   return (
     <html lang='en' className={isDarkMode ? 'dark' : ''}>
-      <body className='dark:bg-[--background] dark:text-white'>
+      <body className='bg-theme text-theme'>
         <Header />
         <main className='mt-[64px]'>{children}</main>
       </body>

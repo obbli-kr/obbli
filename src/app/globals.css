@@ -3,14 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --white: #ffffff;
-  --black: #222222;
-
   --background: #ffffff;
-  --foreground: #222222;
+  --text-color: #222222;
 }
 
 .dark {
   --background: #222222;
-  --foreground: #ffffff;
+  --text-color: #ffffff;
+}
+
+.bg-theme {
+  background-color: var(--background);
+}
+
+.text-theme {
+  color: var(--text-color);
 }

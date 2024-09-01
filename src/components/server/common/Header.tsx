@@ -18,7 +18,7 @@ const Header = () => {
   ];
 
   return (
-    <header className='fixed left-0 top-0 w-full shadow dark:bg-[--background] dark:text-white'>
+    <header className='fixed left-0 top-0 w-full shadow'>
       <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center'>
         <Link href='/'>
           <h1 className='text-3xl font-bold text-orange-600'>Obbli</h1>
