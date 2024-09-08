@@ -1,36 +1,28 @@
 'use client';
 
-import React, { useState, createContext, ReactNode, useRef } from 'react';
-import { useDropdownMenu } from '@/_hooks/ui/useDropdown';
+import { useContext, ReactNode, useRef, useEffect } from 'react';
+import {
+  DropdownContext,
+  DropdownProvider,
+} from '@/components/client/theme/DropdownProvider';
 
-// Dropdown Context 생성
-const DropdownContext = createContext<{
-  isOpen: boolean;
-  toggle: () => void;
-  close: () => void;
-} | null>(null);
-
-// Dropdown 루트 컴포넌트
 const Dropdown = ({ children }: { children: ReactNode }) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const context = useContext(DropdownContext);
+  console.log(context);
+  if (!context) {
+    console.log(
+      'Dropdown 컴포넌트는 DropdownProvider 내부에서 사용되어야 합니다.'
+    );
+  }
 
-  const toggle = () => setIsOpen(!isOpen);
-  const close = () => setIsOpen(false);
-
-  return (
-    <DropdownContext.Provider value={{ isOpen, toggle, close }}>
-      <div className='relative inline-block text-left'>{children}</div>
-    </DropdownContext.Provider>
-  );
+  return <DropdownProvider>{children}</DropdownProvider>;
 };
 
 // DropdownTrigger 컴포넌트
-const DropdownTrigger = ({ children }: { children: ReactNode }) => {
-  const { toggle } = useDropdownMenu();
+const DropdownTrigger = ({ children }: { children: React.ReactElement }) => {
+  const { toggle } = useContext(DropdownContext);
 
-  return React.cloneElement(children as React.ReactElement, {
-    onClick: toggle,
-  });
+  return <div onClick={toggle}>{children}</div>;
 };
 
 // DropdownList 컴포넌트
@@ -41,17 +33,18 @@ const DropdownList = ({
   children: ReactNode;
   align?: 'start' | 'end';
 }) => {
-  const { isOpen, close } = useDropdownMenu();
+  const { isOpen, close } = useContext(DropdownContext);
   const contentRef = useRef<HTMLDivElement>(null);
 
   // 메뉴 외부를 클릭했을 때 닫기 위한 이벤트 핸들러
-  React.useEffect(() => {
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        contentRef.current &&
-        !contentRef.current.contains(event.target as Node)
-      ) {
-        close();
+      // 이벤트 타겟이 HTMLElement인지를 확인하여 타입 안전성 보장
+      if (event.target instanceof HTMLElement) {
+        // contentRef가 가리키는 요소 외부에서 클릭되었는지 확인
+        if (contentRef.current && !contentRef.current.contains(event.target)) {
+          close();
+        }
       }
     };
 
@@ -84,7 +77,7 @@ const DropdownItem = ({
   onClick?: () => void;
   className?: string;
 }) => {
-  const { close } = useDropdownMenu();
+  const { close } = useContext(DropdownContext);
 
   return (
     <button

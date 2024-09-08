@@ -17,16 +17,16 @@ interface DropdownItemProps {
 
 const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState<string>('light');
+  const [currentTheme, setCurrentTheme] = useState<string>('');
+  const themeCookieName = process.env.NEXT_PUBLIC_THEME_COOKIE_NAME || '';
 
   useEffect(() => {
     setMounted(true);
 
     // theme 쿠키 확인
-    const themeCookie = document.cookie
-      .split('; ')
-      .find((row) => row.startsWith('theme'))
-      ?.split('=')[1];
+    const themeCookie = document.cookie.match(
+      new RegExp(`(?:^|; )${themeCookieName}=([^;]*)`)
+    )?.[1];
 
     if (themeCookie) {
       setCurrentTheme(themeCookie);
@@ -43,7 +43,7 @@ const ThemeSwitch = () => {
       }
     } else {
       // 쿠키가 없을 때 기본으로 light 모드로 설정
-      document.cookie = `theme=light; path=/;`;
+      document.cookie = `${themeCookieName}=light; path=/;`;
       document.documentElement.classList.remove('dark');
     }
 
@@ -66,7 +66,7 @@ const ThemeSwitch = () => {
 
   const handleSetTheme = (newTheme: string) => {
     setCurrentTheme(newTheme);
-    document.cookie = `theme=${newTheme}; path=/;`;
+    document.cookie = `${themeCookieName}=${newTheme}; path=/;`;
 
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
