@@ -12,8 +12,8 @@ export function middleware(request: NextRequest) {
     response.headers.set('OS-Theme', 'light');
   } else {
     // 클라이언트 힌트를 사용하여 사용자 선호 색상 모드를 감지
-    const prefersDark =
-      request.headers.get('sec-ch-prefers-color-scheme') === 'dark';
+    const prefersDark
+      = request.headers.get('sec-ch-prefers-color-scheme') === 'dark';
     response.headers.set('OS-Theme', prefersDark ? 'dark' : 'light');
   }
 

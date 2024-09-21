@@ -8,6 +8,11 @@ const ThemeSwitch = dynamic(
   { ssr: false }
 );
 
+const CollapseMenu = dynamic(
+  () => import('@/components/client/common/CollapseMenu'),
+  { ssr: false }
+);
+
 const Header = () => {
   const navItems = [
     { href: '/obbli', label: '오브리' },
@@ -18,12 +23,12 @@ const Header = () => {
   ];
 
   return (
-    <header className='fixed left-0 top-0 w-full shadow'>
-      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center'>
+    <header className='bg-theme fixed left-0 top-0 z-50 w-full shadow'>
+      <div className='mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8'>
         <Link href='/'>
-          <h1 className='text-3xl font-bold text-orange-600'>Obbli</h1>
+          <h1 className='text-3xl font-bold text-orange-600'>{'Obbli'}</h1>
         </Link>
-        <div>
+        <div className='hidden sm:block'>
           {navItems.map((item) => (
             <Link key={item.href} href={item.href}>
               <Button size='md'>{item.label}</Button>
@@ -31,9 +36,14 @@ const Header = () => {
           ))}
         </div>
         <div className='flex items-center gap-2'>
-          <ThemeSwitch />
+          <div className='hidden sm:block'>
+            <ThemeSwitch />
+          </div>
+          <div className='block sm:hidden'>
+            <CollapseMenu />
+          </div>
           <Link href='/login'>
-            <Button size='md'>로그인</Button>
+            <Button size='md'>{'로그인'}</Button>
           </Link>
         </div>
       </div>

@@ -4,17 +4,9 @@ import { useContext, ReactNode, useRef, useEffect } from 'react';
 import {
   DropdownContext,
   DropdownProvider,
-} from '@/components/client/theme/DropdownProvider';
+} from '@/components/client/ui/DropdownProvider';
 
 const Dropdown = ({ children }: { children: ReactNode }) => {
-  const context = useContext(DropdownContext);
-  console.log(context);
-  if (!context) {
-    console.log(
-      'Dropdown 컴포넌트는 DropdownProvider 내부에서 사용되어야 합니다.'
-    );
-  }
-
   return <DropdownProvider>{children}</DropdownProvider>;
 };
 
@@ -57,7 +49,7 @@ const DropdownList = ({
   return isOpen ? (
     <div
       ref={contentRef}
-      className={`absolute z-50 mt-2 min-w-[9rem] rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 transition ease-out duration-200 transform ${
+      className={`absolute z-50 mt-2 min-w-36 rounded-lg bg-white shadow-lg ring-1 ring-black/5 transition duration-200 ease-out ${
         align === 'end' ? 'right-0' : 'left-0'
       }`}
       onClick={close} // 메뉴 아이템 클릭 시 메뉴를 닫기 위해 사용
@@ -73,15 +65,15 @@ const DropdownItem = ({
   onClick,
   className,
 }: {
-  children: ReactNode;
-  onClick?: () => void;
+  children: React.ReactElement;
+  onClick?: ()=> void;
   className?: string;
 }) => {
   const { close } = useContext(DropdownContext);
 
   return (
     <button
-      className={`w-full flex items-center text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 rounded-lg transition-colors duration-150 ease-in-out ${className}`}
+      className={`flex w-full items-center rounded-lg px-4 py-2 text-left text-sm text-gray-700 transition-colors duration-150 ease-in-out hover:bg-gray-100 hover:text-gray-900 ${ className }`}
       onClick={() => {
         if (onClick) onClick();
         close();
