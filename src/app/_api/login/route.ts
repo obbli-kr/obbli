@@ -12,8 +12,8 @@ function authenticate(
 ): boolean {
   // 인증 로직 예시
   return (
-    (username === VALID_USERNAME && password === VALID_PASSWORD) ||
-    loginKey === VALID_LOGIN_KEY
+    (username === VALID_USERNAME && password === VALID_PASSWORD)
+    || loginKey === VALID_LOGIN_KEY
   );
 }
 

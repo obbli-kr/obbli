@@ -5,13 +5,12 @@ import React, { useState } from 'react';
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [loginKey, setLoginKey] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/login?username=${username}&password=${password}`,
+        `${ process.env.NEXT_PUBLIC_API_URL }/api/login?username=${ username }&password=${ password }`,
         {
           method: 'GET',
         }
@@ -30,56 +29,58 @@ export default function LoginPage() {
   };
 
   return (
-    <div className='h-[85vh] grid grid-cols-2 items-center gap-10'>
-      <div className='flex justify-end'>
-        <form onSubmit={handleSubmit} className='space-y-3 w-64'>
-          <h1 className='text-2xl font-bold my-4 text-center'>로그인</h1>
+    <div className="grid h-[85vh] items-center justify-center sm:grid-cols-2 sm:gap-10">
+      <div className="flex justify-end">
+        <form onSubmit={handleSubmit} className="w-64 space-y-3">
+          <h1 className="text-theme my-4 text-center text-2xl font-bold">
+            {'로그인'}
+          </h1>
           <div>
-            <label htmlFor='username' className='block text-gray-700'>
-              아이디
+            <label htmlFor="username" className="block">
+              {'아이디'}
             </label>
             <input
-              type='text'
-              id='username'
+              type="text"
+              id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className='mt-1 p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-orange-300'
+              className="mt-1 w-full rounded-md border p-2 focus:border-orange-300 focus:outline-none focus:ring"
               required
             />
           </div>
           <div>
-            <label htmlFor='password' className='block text-gray-700'>
-              비밀번호
+            <label htmlFor="password" className="block">
+              {'비밀번호'}
             </label>
             <input
-              type='password'
-              id='password'
+              type="password"
+              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className='p-2 w-full border rounded-md focus:outline-none focus:ring focus:border-orange-300'
+              className="w-full rounded-md border p-2 focus:border-orange-300 focus:outline-none focus:ring"
               required
             />
           </div>
           <button
-            type='submit'
-            className='w-full py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-300'
+            type="submit"
+            className="w-full rounded-md bg-orange-500 py-2 text-white hover:bg-orange-600 focus:outline-none focus:ring focus:ring-orange-300"
           >
-            로그인
+            {'로그인'}
           </button>
-          <div className='flex justify-center mt-2 gap-5'>
-            <a href='#' className='text-gray-500'>
-              아이디/비밀번호 찾기
+          <div className="mt-2 flex justify-center gap-5">
+            <a href="#" className="text-gray-500">
+              {'아이디/비밀번호 찾기'}
             </a>
-            <a href='#' className='text-gray-700'>
-              회원가입
-            </a>
+            <a href="#">{'회원가입'}</a>
           </div>
         </form>
       </div>
       {/* 아마도 Next-Auth 라이브러리 사용해야..? */}
-      <div className='w-64 h-[300px] flex flex-col'>
-        <p className='flex justify-center items-end h-12'>혹은 간편로그인</p>
-        <div className='grid grid-rows-3 gap-5 mt-12'>
+      <div className="flex h-[300px] w-64 flex-col">
+        <p className="flex h-12 items-end justify-center">
+          {'혹은 간편로그인'}
+        </p>
+        <div className="mt-12 grid grid-rows-3 gap-5">
           <button
             onClick={() =>
               window.open(
@@ -88,9 +89,9 @@ export default function LoginPage() {
                 'width=500, height=500'
               )
             }
-            className='ml-2 p-2 border rounded-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300'
+            className="ml-2 rounded-md border p-2 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300"
           >
-            <p>Google</p>
+            <p>{'Google'}</p>
           </button>
           <button
             onClick={() =>
@@ -100,9 +101,9 @@ export default function LoginPage() {
                 'width=500, height=500'
               )
             }
-            className='ml-2 p-2 border rounded-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300'
+            className="ml-2 rounded-md border p-2 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300"
           >
-            <p>Naver</p>
+            <p>{'Naver'}</p>
           </button>
           <button
             onClick={() =>
@@ -112,9 +113,9 @@ export default function LoginPage() {
                 'width=500, height=500'
               )
             }
-            className='ml-2 p-2 border rounded-md hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300'
+            className="ml-2 rounded-md border p-2 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300"
           >
-            <p>Kakao</p>
+            <p>{'Kakao'}</p>
           </button>
         </div>
       </div>

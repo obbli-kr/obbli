@@ -8,6 +8,7 @@ import {
   DropdownTrigger,
 } from '@/components/client/ui/Dropdown';
 import { LucideIcon, Dot, Monitor, Moon, Sun } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 interface DropdownItemProps {
   newTheme: string;
@@ -19,13 +20,14 @@ const ThemeSwitch = () => {
   const [mounted, setMounted] = useState(false);
   const [currentTheme, setCurrentTheme] = useState<string>('');
   const themeCookieName = process.env.NEXT_PUBLIC_THEME_COOKIE_NAME || '';
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
 
     // theme 쿠키 확인
     const themeCookie = document.cookie.match(
-      new RegExp(`(?:^|; )${themeCookieName}=([^;]*)`)
+      new RegExp(`(?:^|; )${ themeCookieName }=([^;]*)`)
     )?.[1];
 
     if (themeCookie) {
@@ -43,13 +45,13 @@ const ThemeSwitch = () => {
       }
     } else {
       // 쿠키가 없을 때 기본으로 light 모드로 설정
-      document.cookie = `${themeCookieName}=light; path=/;`;
+      document.cookie = `${ themeCookieName }=light; path=/;`;
       document.documentElement.classList.remove('dark');
     }
 
     const handleSystemThemeChange = (e: MediaQueryListEvent) => {
       const prefersDark = e.matches;
-      document.cookie = `darkMode=${prefersDark ? 'true' : 'false'}; path=/;`;
+      document.cookie = `darkMode=${ prefersDark ? 'true' : 'false' }; path=/;`;
       document.documentElement.classList.toggle('dark', prefersDark);
     };
 
@@ -62,11 +64,11 @@ const ThemeSwitch = () => {
         .matchMedia('(prefers-color-scheme: dark)')
         .removeEventListener('change', handleSystemThemeChange);
     };
-  }, []);
+  }, [themeCookieName]);
 
   const handleSetTheme = (newTheme: string) => {
     setCurrentTheme(newTheme);
-    document.cookie = `${themeCookieName}=${newTheme}; path=/;`;
+    document.cookie = `${ themeCookieName }=${ newTheme }; path=/;`;
 
     if (newTheme === 'dark') {
       document.documentElement.classList.add('dark');
@@ -78,11 +80,12 @@ const ThemeSwitch = () => {
       ).matches;
       document.documentElement.classList.toggle('dark', systemPrefersDark);
     }
+    router.refresh();
   };
 
   const ThemeItem = ({ newTheme, Icon, label }: DropdownItemProps) => (
     <DropdownItem onClick={() => handleSetTheme(newTheme)}>
-      <div className='w-full flex justify-between items-center'>
+      <div className='flex w-full items-center justify-between'>
         <div className='flex items-center gap-2'>
           <Icon width={14} />
           {label}
@@ -97,13 +100,13 @@ const ThemeSwitch = () => {
   return (
     <Dropdown>
       <DropdownTrigger>
-        <button className='flex p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600'>
+        <button className='flex rounded-md p-2 hover:bg-gray-200 dark:hover:bg-gray-600'>
           {currentTheme === 'light' ? (
-            <Sun className='h-4 w-4' />
+            <Sun className='size-4' />
           ) : currentTheme === 'dark' ? (
-            <Moon className='h-4 w-4' />
+            <Moon className='size-4' />
           ) : (
-            <Monitor className='h-4 w-4' />
+            <Monitor className='size-4' />
           )}
         </button>
       </DropdownTrigger>
