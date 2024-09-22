@@ -7,10 +7,7 @@ interface CarouselClientWrapperProps {
   itemCount: number;
 }
 
-const CarouselClientWrapper = ({
-  children,
-  itemCount,
-}: CarouselClientWrapperProps) => {
+const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperProps) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
@@ -18,8 +15,11 @@ const CarouselClientWrapper = ({
   const contentRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
-  const speedRef = useRef<number>(50); // pixels per second
   const touchMoveRef = useRef<number>(0);
+
+  // 무한 스크롤을 위한 children 복제 (pc 크기상 2개면 충분)
+  const childrenArray = React.Children.toArray(children);
+  const duplicatedChildren = [...childrenArray, ...childrenArray];
 
   useEffect(() => {
     // 모바일에서 포스터 클릭으로 링크 들어갔다가 뒤로가기하면 애니메이션이 멈추는 문제 해결
@@ -60,11 +60,12 @@ const CarouselClientWrapper = ({
   const animate = useCallback((time: number) => {
     if (lastTimeRef.current != null && !isPaused) {
       const deltaTime = time - lastTimeRef.current;
-      const itemWidth = 210 + 12; // 210px + 12px margin
+      const itemWidth = 210 + 24; // 210px + 24px margin
       const totalWidth = itemWidth * itemCount;
 
       setScrollPosition((prevPosition) => {
-        const newPosition = (prevPosition + (speedRef.current * deltaTime) / 1000) % totalWidth;
+        const speed = 100; // 100px/s
+        const newPosition = (prevPosition + (speed * deltaTime) / 1000) % totalWidth;
         return newPosition >= 0 ? newPosition : newPosition + totalWidth;
       });
     }
@@ -101,7 +102,7 @@ const CarouselClientWrapper = ({
 
     setScrollPosition((prevPosition) => {
       let newPosition = prevPosition + diff;
-      const totalWidth = (210 + 12) * itemCount;
+      const totalWidth = (210 + 24) * itemCount;
 
       if (newPosition < 0) {
         newPosition += totalWidth;
@@ -117,7 +118,7 @@ const CarouselClientWrapper = ({
 
   const handleTouchEnd = useCallback(() => {
     setIsPaused(false);
-    const itemWidth = 210 + 12;
+    const itemWidth = 210 + 24;
     const snapThreshold = itemWidth / 2;
     const mod = scrollPosition % itemWidth;
 
@@ -130,8 +131,6 @@ const CarouselClientWrapper = ({
       setScrollPosition((prevPosition) => prevPosition - mod);
     }
   }, [scrollPosition]);
-
-  const childrenArray = React.Children.toArray(children);
 
   return (
     <div
@@ -154,10 +153,10 @@ const CarouselClientWrapper = ({
         ref={contentRef}
         className='relative flex'
         style={{
-          transform: `translate3d(-${ scrollPosition }px, 0, 0)`,
+          transform: `translateX(-${ scrollPosition }px)`,
         }}
       >
-        {childrenArray.map((child, index) => (
+        {duplicatedChildren.map((child, index) => (
           <div
             key={index}
             className='mx-3 h-[297px] w-[210px] shrink-0 shadow-lg'
