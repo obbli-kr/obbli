@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { headers } from 'next/headers';
 import './globals.css';
 import Header from '@/components/server/common/Header';
+import Footer from '@/components/server/common/Footer';
 
 interface RootLayoutProps {
   readonly children: React.ReactNode;
@@ -21,6 +22,7 @@ const RootLayout = ({ children }: RootLayoutProps) => {
       <body className='bg-theme text-theme'>
         <Header />
         <main className='mt-[64px]'>{children}</main>
+        <Footer />
       </body>
     </html>
   );

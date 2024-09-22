@@ -5,11 +5,19 @@
 :root {
   --background: #ffffff;
   --text-color: #222222;
+  --primary-color: #f97316;
+  --secondary-color: #fed7aa;
+
+  --border-color: #e5e7eb;
 }
 
 .dark {
   --background: #222222;
   --text-color: #ffffff;
+  --primary-color: #ea580c;
+  --secondary-color: #f97316;
+
+  --border-color: #374151;
 }
 
 .bg-theme {
@@ -18,4 +26,17 @@
 
 .text-theme {
   color: var(--text-color);
+}
+
+.text-theme-primary {
+  color: var(--primary-color);
+}
+
+.bg-theme-secondary {
+  background-color: var(--secondary-color);
+}
+
+.border-b-theme {
+  border-bottom: 1px solid;
+  color: var(--border-color);
 }
