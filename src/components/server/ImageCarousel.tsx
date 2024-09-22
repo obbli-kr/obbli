@@ -41,6 +41,7 @@ const ImageCarousel = ({ title, urlPath, items }: ImageCarouselProps) => {
                 width={210}
                 height={297}
                 style={{ width: '210px', height: '297px', objectFit: 'cover' }}
+                priority
               />
             </Link>
           </div>
