@@ -6,26 +6,26 @@ import { signIn } from 'next-auth/react';
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(''); // Reset error message
     try {
-      const response = await fetch(
-        `${ process.env.NEXT_PUBLIC_API_URL }/api/login?username=${ username }&password=${ password }`,
-        {
-          method: 'GET',
-        }
-      );
-      const data = await response.json();
-      if (data.success) {
-        alert('로그인 성공!');
-        // 여기에서 로그인 성공 후 처리
+      const result = await signIn('credentials', {
+        redirect: false,
+        username,
+        password,
+      });
+      if (result?.error) {
+        setError(result.error);
       } else {
-        alert('로그인 실패. 다시 시도해주세요.');
+        // Redirect to the home page on success
+        window.location.href = '/';
       }
     } catch (error) {
       console.error('로그인 중 오류 발생:', error);
-      alert('로그인 처리 중 오류가 발생했습니다.');
+      setError('로그인 처리 중 오류가 발생했습니다.');
     }
   };
 
@@ -36,6 +36,11 @@ export default function LoginPage() {
           <h1 className="text-theme my-4 text-center text-2xl font-bold">
             {'로그인'}
           </h1>
+          {error && (
+            <div className="text-red-500 text-center">
+              {error}
+            </div>
+          )}
           <div>
             <label htmlFor="username" className="block">
               {'아이디'}
@@ -72,7 +77,7 @@ export default function LoginPage() {
             <a href="#" className="text-gray-500">
               {'아이디/비밀번호 찾기'}
             </a>
-            <a href="#">{'회원가입'}</a>
+            <a href="/signup">{'회원가입'}</a>
           </div>
         </form>
       </div>
