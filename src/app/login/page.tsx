@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { signIn } from 'next-auth/react';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -116,6 +117,12 @@ export default function LoginPage() {
             className="ml-2 rounded-md border p-2 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300"
           >
             <p>{'Kakao'}</p>
+          </button>
+          <button
+            onClick={() => signIn('github')}
+            className="ml-2 rounded-md border p-2 hover:bg-gray-100 focus:outline-none focus:ring focus:ring-orange-300"
+          >
+            <p>{'Github'}</p>
           </button>
         </div>
       </div>
