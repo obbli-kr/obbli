@@ -31,7 +31,7 @@ const ImageCarousel = ({ title, urlPath, items }: ImageCarouselProps) => {
           {'더보기'}
         </Link>
       </div>
-      <CarouselClientWrapper itemCount={items.length}>
+      <CarouselClientWrapper itemCount={items.length} itemWidth={234}>
         {items.map((item) => (
           <div key={item.id}>
             <Link href={`/${ urlPath }/${ item.id }`}>

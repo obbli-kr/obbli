@@ -24,7 +24,7 @@
     "semi": ["error", "always"],
     "quotes": ["error", "single"],
     "no-trailing-spaces": "error",
-    // "no-unused-vars": "error",
+    "no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
     "tailwindcss/no-custom-classname": "off",
     "tailwindcss/classnames-order": "off",
     "@typescript-eslint/no-unnecessary-condition": "error",

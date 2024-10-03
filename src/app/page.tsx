@@ -36,8 +36,8 @@ const fetchBoardData2 = async (): Promise<BoardData[]> => {
   return mockBoardData2;
 };
 
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
+const formatDate = (dateTime: string): string => {
+  const date = new Date(dateTime);
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const day = date.getDate().toString().padStart(2, '0');
   return `${ month }/${ day }`;

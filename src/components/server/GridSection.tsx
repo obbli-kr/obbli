@@ -4,14 +4,14 @@ interface GridItem {
   id: number;
   title: string;
   instrument?: string;
-  datetime: string;
+  dateTime: string;
   userId?: string;
 }
 
 interface GridSectionProps {
   title: string;
   data: GridItem[];
-  formatTime: (dateString: string)=> string;
+  formatTime: (_dateTime: string)=> string;
   urlPath: string;
 }
 
@@ -45,7 +45,7 @@ const GridSection = ({
             {item.title}
           </div>
           <div className='text-theme col-span-3 truncate text-center text-sm'>
-            {formatTime(item.datetime)}
+            {formatTime(item.dateTime)}
           </div>
         </Link>
       ))}
