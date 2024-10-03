@@ -5,14 +5,13 @@ import React, { useState, useEffect, useRef, TouchEvent, useCallback } from 'rea
 interface CarouselClientWrapperProps {
   children: React.ReactNode;
   itemCount: number;
+  itemWidth: number;
 }
 
-const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperProps) => {
+const CarouselClientWrapper = ({ children, itemCount, itemWidth }: CarouselClientWrapperProps) => {
   const [scrollPosition, setScrollPosition] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
-  const carouselRef = useRef<HTMLDivElement | null>(null);
-  const contentRef = useRef<HTMLDivElement | null>(null);
   const animationRef = useRef<number | null>(null);
   const lastTimeRef = useRef<number | null>(null);
   const touchMoveRef = useRef<number>(0);
@@ -20,6 +19,37 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
   // 무한 스크롤을 위한 children 복제 (pc 크기상 2개면 충분)
   const childrenArray = React.Children.toArray(children);
   const duplicatedChildren = [...childrenArray, ...childrenArray];
+
+  // 애니메이션 함수
+  const animate = useCallback((time: number) => {
+    if (lastTimeRef.current != null && !isPaused) {
+      const deltaTime = time - lastTimeRef.current;
+      const totalWidth = itemWidth * itemCount;
+
+      setScrollPosition((prevPosition) => {
+        const speed = 100; // 100px/s
+        const newPosition = (prevPosition + ((speed * deltaTime) / 1000)) % totalWidth;
+        return newPosition >= 0 ? newPosition : newPosition + totalWidth;
+      });
+    }
+    lastTimeRef.current = time;
+    animationRef.current = requestAnimationFrame(animate);
+  }, [itemCount, itemWidth, isPaused]);
+
+  // 애니메이션 시작/중지 함수
+  const startAnimation = useCallback(() => {
+    if (!animationRef.current) {
+      lastTimeRef.current = performance.now();
+      animationRef.current = requestAnimationFrame(animate);
+    }
+  }, [animate]);
+
+  const stopAnimation = useCallback(() => {
+    if (animationRef.current) {
+      cancelAnimationFrame(animationRef.current);
+      animationRef.current = null;
+    }
+  }, []);
 
   useEffect(() => {
     // 모바일에서 포스터 클릭으로 링크 들어갔다가 뒤로가기하면 애니메이션이 멈추는 문제 해결
@@ -47,46 +77,18 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
       document.removeEventListener('visibilitychange', handleVisibilityChange);
       window.removeEventListener('popstate', handlePopState);
     };
-  }, []);
+  }, [startAnimation, stopAnimation]);
 
   useEffect(() => {
-    isPaused ? stopAnimation() : startAnimation();
+    if (isPaused) {
+      stopAnimation();
+    } else {
+      startAnimation();
+    }
     return () => {
       stopAnimation();
     };
-  }, [isPaused]);
-
-  // 애니메이션 함수
-  const animate = useCallback((time: number) => {
-    if (lastTimeRef.current != null && !isPaused) {
-      const deltaTime = time - lastTimeRef.current;
-      const itemWidth = 210 + 24; // 210px + 24px margin
-      const totalWidth = itemWidth * itemCount;
-
-      setScrollPosition((prevPosition) => {
-        const speed = 100; // 100px/s
-        const newPosition = (prevPosition + (speed * deltaTime) / 1000) % totalWidth;
-        return newPosition >= 0 ? newPosition : newPosition + totalWidth;
-      });
-    }
-    lastTimeRef.current = time;
-    animationRef.current = requestAnimationFrame(animate);
-  }, [itemCount]);
-
-  // 애니메이션 시작/중지 함수
-  const startAnimation = useCallback(() => {
-    if (!animationRef.current) {
-      lastTimeRef.current = performance.now();
-      animationRef.current = requestAnimationFrame(animate);
-    }
-  }, [animate]);
-
-  const stopAnimation = useCallback(() => {
-    if (animationRef.current) {
-      cancelAnimationFrame(animationRef.current);
-      animationRef.current = null;
-    }
-  }, []);
+  }, [isPaused, startAnimation, stopAnimation]);
 
   // 터치 이벤트 핸들러(모바일)
   const handleTouchStart = useCallback((e: TouchEvent<HTMLDivElement>) => {
@@ -95,9 +97,9 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
     touchMoveRef.current = 0;
   }, []);
 
-  const handleTouchMove = useCallback((e: TouchEvent<HTMLDivElement>) => {
-    const currentTouch = e.targetTouches[0].clientX;
-    const diff = touchStart - currentTouch;
+  const startTouchPosition = useCallback((e: TouchEvent<HTMLDivElement>) => {
+    const currentTouchPosition = e.targetTouches[0].clientX;
+    const diff = touchStart - currentTouchPosition;
     touchMoveRef.current = diff;
 
     setScrollPosition((prevPosition) => {
@@ -113,12 +115,11 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
       return newPosition;
     });
 
-    setTouchStart(currentTouch);
+    setTouchStart(currentTouchPosition);
   }, [touchStart, itemCount]);
 
   const handleTouchEnd = useCallback(() => {
     setIsPaused(false);
-    const itemWidth = 210 + 24;
     const snapThreshold = itemWidth / 2;
     const mod = scrollPosition % itemWidth;
 
@@ -130,11 +131,10 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
     } else {
       setScrollPosition((prevPosition) => prevPosition - mod);
     }
-  }, [scrollPosition]);
+  }, [itemWidth, scrollPosition]);
 
   return (
     <div
-      ref={carouselRef}
       className='relative overflow-hidden'
       style={{
         WebkitOverflowScrolling: 'touch',
@@ -144,13 +144,12 @@ const CarouselClientWrapper = ({ children, itemCount }: CarouselClientWrapperPro
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
+      onTouchMove={startTouchPosition}
       onTouchEnd={handleTouchEnd}
       role="region"
       aria-label="이미지 캐러셀(슬라이드)"
     >
       <div
-        ref={contentRef}
         className='relative flex'
         style={{
           transform: `translateX(-${ scrollPosition }px)`,
