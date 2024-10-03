@@ -10,7 +10,7 @@ import {
   GridData,
   CarouselItem,
   BoardData,
-} from '@/_libs/mockData';
+} from '@/libs/mockData';
 
 // Mock API 함수
 const fetchObbliData = async (): Promise<GridData[]> => {
